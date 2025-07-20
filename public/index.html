@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>Квест</title>
+   <style>
+    body { font-family: Arial, sans-serif; max-width: 400px; margin: 50px auto; }
+    img { width: 300px; display: block; margin-bottom: 20px; }
+    input, button { padding: 10px; margin: 5px 0; width: 100%; }
+  </style>
+</head>
+<body>
+
+   <h2>Добро пожаловать в Кроличий квест!</h2>
+  <img src="rabbit.png" alt="Кролик" />
+  <!-- flag{hidden_in_comment} -->
+
+  <form id="loginForm">
+    <input type="text" id="username" placeholder="Логин" required />
+    <input type="password" id="password" placeholder="Пароль" required />
+    <button type="submit">Войти</button>
+  </form>
+
+  <p id="result"></p>
+
+  <!-- Сначала подключаем файл с функцией -->
+  <script src="/auth.js"></script>
+
+  <!-- Затем код, который её использует -->
+  <script>
+    const form = document.getElementById('loginForm');
+    const result = document.getElementById('result');
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+
+      const user = form.username.value.trim();
+      const pass = form.password.value.trim();
+
+      if (typeof checkCredentials === 'function' && checkCredentials(user, pass)) {
+        result.style.color = 'green';
+        result.textContent = 'Поздравляем! Ваш флаг: flag{final_flag_js}';
+      } else {
+        result.style.color = 'red';
+        result.textContent = 'Неверный логин или пароль, попробуйте ещё.';
+      }
+    });
+  </script>
+
+</body>
+</html>
+
