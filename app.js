@@ -15,6 +15,8 @@ app.use(express.static(path.join(__dirname, 'static')));
 
 // Простой маршрут
 app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'static', 'index.html'));
+  res.sendFile(path.join(__dirname, 'static', 'f13ld.html'));
   res.send('Hello from Express on Debian 12!');
 });
 
