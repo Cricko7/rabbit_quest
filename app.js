@@ -22,5 +22,5 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Запуск сервера
 app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
+  console.log(`Server running at http://217.198.13.234:${port}`);
 });
