@@ -40,5 +40,5 @@ jobs:
         script: |
           cd /home/${{ secrets.SERVER_USER }}/express-app
           npm install
-          pm2 reload my-express-app || pm2 start ~/rabbit_quest/app.js --name my-express-app
+          pm2 reload my-express-app || pm2 start /${{ secrets.SERVER_USER }}/rabbit_quest/app.js --name my-express-app
 
