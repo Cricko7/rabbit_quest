@@ -13,29 +13,25 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-
+    - uses: actions/checkout@v3                     # Клонирует репозиторий
     - name: Setup Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: 18
-
+        node-version: 18                            # Устанавливает Node.js 18
     - name: Install dependencies
-      run: npm ci
-
+      run: npm ci                                  # Чистая установка зависимостей
     - name: Copy app to server
-      uses: appleboy/scp-action@v0.1.7
+      uses: appleboy/scp-action@v0.1.7             # Копирует проект на сервер по SSH
       with:
-        host: ${{ secrets.SERVER_HOST }}
-        username: ${{ secrets.SERVER_USER }}
-        key: ${{ secrets.SERVER_SSH_KEY }}
+        host: ${{ secrets.SERVER_HOST }}           # IP или домен сервера (из GitHub Secrets)
+        username: ${{ secrets.SERVER_USER }}       # Пользователь сервера
+        key: ${{ secrets.SERVER_SSH_KEY }}          # Приватный SSH ключ из Secrets
         port: 22
-        source: "."
-        target: "/home/${{ secrets.SERVER_USER }}/express-app"
-        rm: true
-
+        source: "."                                # Отправляет весь репозиторий
+        target: "/home/${{ secrets.SERVER_USER }}/express-app"  # Путь на сервере
+        rm: true                                  # Удаляет целевую папку перед копированием
     - name: Restart app on server
-      uses: appleboy/ssh-action@v0.1.7
+      uses: appleboy/ssh-action@v0.1.7             # Подключается по SSH и перезапускает приложение
       with:
         host: ${{ secrets.SERVER_HOST }}
         username: ${{ secrets.SERVER_USER }}
@@ -44,5 +40,5 @@ jobs:
         script: |
           cd /home/${{ secrets.SERVER_USER }}/express-app
           npm install
-          pm2 reload my-express-app || pm2 start app.js --name my-express-app
+          pm2 reload my-express-app || pm2 start ~/rabbit_quest/app.js --name my-express-app
 
