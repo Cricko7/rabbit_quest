@@ -48,7 +48,7 @@ jobs:
         key: ${{ secrets.SERVER_SSH_KEY }}
         port: 22
         script: |
-          cd /home/${{ secrets.SERVER_USER }}/express-app
+          cd /${{ secrets.SERVER_USER }}/express-app
           npm install
           pm2 reload my-express-app || pm2 start /${{ secrets.SERVER_USER }}/rabbit_quest/app.js --name my-express-app
 
