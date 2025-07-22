@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3                   # Скачиваем код для сборки, тестов и т.д.
+    - uses: actions/checkout@v3                   # Клонируем репозиторий в runner
     - name: Setup Node.js
       uses: actions/setup-node@v3
       with:
@@ -27,9 +27,9 @@ jobs:
         username: ${{ secrets.SERVER_USER }}
         key: ${{ secrets.SERVER_SSH_KEY }}
         port: 22
-        source: "."
-        target: "/home/${{ secrets.SERVER_USER }}/express-app"
-        rm: true
+        source: "."                                        # Копируем весь репозиторий
+        target: "/root/express-app"                        # Полный путь до папки проекта на сервере
+        rm: true                                          # Удаляем содержимое перед копированием
     - name: Restart app on server
       uses: appleboy/ssh-action@v0.1.7
       with:
@@ -38,7 +38,7 @@ jobs:
         key: ${{ secrets.SERVER_SSH_KEY }}
         port: 22
         script: |
-          cd /home/${{ secrets.SERVER_USER }}/express-app
+          cd /root/express-app
           npm install
           pm2 reload my-express-app || pm2 start app.js --name my-express-app
 
