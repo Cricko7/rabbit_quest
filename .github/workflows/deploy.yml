@@ -27,7 +27,7 @@ jobs:
       with:
         context: .
         push: true
-        tags: yourdockerhubusername/yourapp:latest
+        tags: cr1cke77e/yourapp:latest  # замените на свои имя и репозиторий
 
     - name: Deploy on server
       uses: appleboy/ssh-action@v0.1.7
@@ -37,9 +37,7 @@ jobs:
         key: ${{ secrets.SERVER_SSH_KEY }}
         port: 22
         script: |
-          docker pull yourdockerhubusername/yourapp:latest
+          docker pull cr1cke77e/yourapp:latest
           docker stop my-express-app || true
           docker rm my-express-app || true
-          docker run -d --name my-express-app -p 3000:3000 yourdockerhubusername/yourapp:latest
-
-
+          docker run -d --name my-express-app -p 3000:3000 cr1cke77e/yourapp:latest
