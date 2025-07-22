@@ -1,7 +1,7 @@
 # This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
 
-name: Deploy Express App
+name: Build and Deploy Docker App
 
 on:
   push:
@@ -9,35 +9,37 @@ on:
       - main
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Setup Node.js
-      uses: actions/setup-node@v3
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v2
       with:
-        node-version: 18
-    - name: Install dependencies (optional, local)
-      run: npm ci
-    - name: Copy project to server
-      uses: appleboy/scp-action@v0.1.7
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v4
       with:
-        host: ${{ secrets.SERVER_HOST }}
-        username: root
-        key: ${{ secrets.SERVER_SSH_KEY }}
-        port: 22
-        source: "."
-        target: "/home/root/rabbit_quest"
-        rm: true
-    - name: Restart app on server
+        context: .
+        push: true
+        tags: yourdockerhubusername/yourapp:latest
+
+    - name: Deploy on server
       uses: appleboy/ssh-action@v0.1.7
       with:
         host: ${{ secrets.SERVER_HOST }}
-        username: root
+        username: ${{ secrets.SERVER_USER }}
         key: ${{ secrets.SERVER_SSH_KEY }}
         port: 22
         script: |
-          cd /home/root/rabbit_quest
-          npm install
-          pm2 reload my-express-app || pm2 start app.js --name my-express-app
+          docker pull yourdockerhubusername/yourapp:latest
+          docker stop my-express-app || true
+          docker rm my-express-app || true
+          docker run -d --name my-express-app -p 3000:3000 yourdockerhubusername/yourapp:latest
+
+
