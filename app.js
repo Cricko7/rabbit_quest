@@ -10,8 +10,8 @@ const port = process.env.PORT || 3000;
 const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' });
 app.use(morgan('combined', { stream: accessLogStream }));
 
-// Отдача статических файлов из ./public
-app.use(express.static(path.join(__dirname, 'public')));
+// Отдача статических файлов из ./static
+app.use(express.static(path.join(__dirname, 'static')));
 
 // Простой маршрут
 app.get('/', (req, res) => {
